@@ -1,0 +1,90 @@
+# =====================================================
+# DEPENDÊNCIAS - SISTEMA VIVIENDA v2.3
+# =====================================================
+# 
+# Sistema: Digital Twin BIM + IoT + LLM (Model Context Protocol)
+# Compatível: Python 3.9 - 3.13
+# Autor: João Rodrigues - FEUP Mestrado 2025/2026
+#
+# INSTALAÇÃO:
+#   pip install -r requirements.txt
+#
+# =====================================================
+
+# ==========================================
+# CORE - OBRIGATÓRIAS
+# ==========================================
+
+# Framework web
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# Processamento IFC (versão compatível Python 3.13)
+ifcopenshell>=0.8.0
+
+# ==========================================
+# MODEL CONTEXT PROTOCOL - OBRIGATÓRIO
+# ==========================================
+# ⚠️ CRÍTICO: Sem esta dependência o servidor MCP não funciona!
+
+mcp>=1.0.0
+
+# ==========================================
+# ANÁLISE DE DADOS - ESSENCIAIS
+# ==========================================
+
+# Manipulação de dados e Excel
+pandas>=2.0.0
+openpyxl>=3.1.0
+
+# Cálculos científicos (PMV, PPD, etc)
+numpy>=1.24.0
+scipy>=1.10.0
+
+# ==========================================
+# SENSORES IOT - OPCIONAIS
+# ==========================================
+
+# MQTT (se usares sensores MQTT)
+paho-mqtt>=1.6.0
+
+# Requests (se usares APIs HTTP)
+requests>=2.31.0
+
+# ==========================================
+# NORMAS ISO - OPCIONAL
+# ==========================================
+
+# ==========================================
+# TESTES - DESENVOLVIMENTO
+# ==========================================
+# Apenas para desenvolvimento e validação
+# Instalar com: pip install -r requirements.txt -r requirements-dev.txt
+
+# pytest>=7.4.0
+# pytest-flask>=1.3.0
+# pytest-cov>=4.1.0
+
+# ==========================================
+# NOTAS IMPORTANTES
+# ==========================================
+# 
+# DIFERENÇAS vs requirements.txt v2.2:
+# - ✅ ADICIONADO: mcp>=1.0.0 (CRÍTICO para servidor MCP)
+# - Removidas versões fixas (==) que causavam conflitos
+# - Usa versões mínimas (>=) para compatibilidade
+# - ifcopenshell>=0.8.0 (compatível Python 3.13)
+#
+# INSTALAÇÃO MÍNIMA (só backend básico):
+#   pip install flask flask-cors ifcopenshell
+#
+# INSTALAÇÃO COMPLETA (recomendado):
+#   pip install -r requirements.txt
+#
+# INSTALAÇÃO COM TESTES (desenvolvimento):
+#   pip install -r requirements.txt pytest pytest-flask pytest-cov
+#
+# VERIFICAR INSTALAÇÃO:
+#   pip list | grep -E "flask|ifcopenshell|mcp|pandas"
+#
+# ==========================================

@@ -1,0 +1,752 @@
+[
+  {
+    "ID": "P01",
+    "Categoria": "Informativo",
+    "Prompt": "Qual a temperatura atual do espaço [NOME_ESPAÇO]?",
+    "Função_MCP": "get_all_sensor_data()",
+    "Endpoint": "/api/sensors/current",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Few-Shot"
+  },
+  {
+    "ID": "P02",
+    "Categoria": "Informativo",
+    "Prompt": "Lista as temperaturas atuais de todos os espaços do modelo [NOME_IFC].",
+    "Função_MCP": "analyze_thermal_data()",
+    "Endpoint": "/api/sensors/current",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Few-Shot"
+  },
+  {
+    "ID": "P03",
+    "Categoria": "Informativo",
+    "Prompt": "Lista todos os espaços do modelo [NOME_IFC], incluindo identificador e área útil.",
+    "Função_MCP": "load_ifc_spaces()",
+    "Endpoint": "/api/ifc/spaces",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Few-Shot"
+  },
+  {
+    "ID": "P04",
+    "Categoria": "Informativo",
+    "Prompt": "Encontra espaços com nome [NOME_ESPAÇO], devolvendo identificador e atributos principais.",
+    "Função_MCP": "find_spaces()",
+    "Endpoint": "/api/ifc/spaces",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Few-Shot"
+  },
+  {
+    "ID": "P05",
+    "Categoria": "Informativo",
+    "Prompt": "Lista todos os sensores disponíveis no modelo [NOME_IFC].",
+    "Função_MCP": "list_associations()",
+    "Endpoint": "/api/sensors/list",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Few-Shot"
+  },
+  {
+    "ID": "P06",
+    "Categoria": "Informativo",
+    "Prompt": "Que sensores estão associados ao espaço [NOME_ESPAÇO]?",
+    "Função_MCP": "list_associations()",
+    "Endpoint": "/api/sensors/list",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Few-Shot"
+  },
+  {
+    "ID": "P07",
+    "Categoria": "Informativo",
+    "Prompt": "Qual é o valor atual de CO2 no espaço [NOME_ESPAÇO]?",
+    "Função_MCP": "get_sensor_data_by_type()",
+    "Endpoint": "/api/sensors/current",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Few-Shot"
+  },
+  {
+    "ID": "P08",
+    "Categoria": "Informativo",
+    "Prompt": "Analisa a qualidade do ar nos espaços [LISTA_ESPAÇOS], indicando CO2, humidade e ventilação.",
+    "Função_MCP": "analyze_indoor_quality()",
+    "Endpoint": "/api/sensors/quality",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Few-Shot"
+  },
+  {
+    "ID": "P09",
+    "Categoria": "Comparativo",
+    "Prompt": "Qual é o espaço mais quente no modelo [NOME_IFC]?",
+    "Função_MCP": "analyze_thermal_data()",
+    "Endpoint": "/api/sensors/comparison",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Few-Shot"
+  },
+  {
+    "ID": "P10",
+    "Categoria": "Comparativo",
+    "Prompt": "Qual é o espaço mais frio no modelo [NOME_IFC]?",
+    "Função_MCP": "analyze_thermal_data()",
+    "Endpoint": "/api/sensors/comparison",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Few-Shot"
+  },
+  {
+    "ID": "P11",
+    "Categoria": "Comparativo",
+    "Prompt": "Compara a temperatura entre os espaços [NOME_ESPAÇO_1] e [NOME_ESPAÇO_2].",
+    "Função_MCP": "compare_spaces_temperature()",
+    "Endpoint": "/api/sensors/comparison",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Few-Shot"
+  },
+  {
+    "ID": "P12",
+    "Categoria": "Comparativo",
+    "Prompt": "Ordena todos os espaços do modelo [NOME_IFC] por temperatura atual.",
+    "Função_MCP": "analyze_thermal_data()",
+    "Endpoint": "/api/sensors/ranking",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Few-Shot"
+  },
+  {
+    "ID": "P13",
+    "Categoria": "Comparativo",
+    "Prompt": "Verifica se os espaços [LISTA_ESPAÇOS] cumprem a norma [NOME_NORMA], indicando parâmetros fora de conformidade.",
+    "Função_MCP": "check_iso_compliance_detailed()",
+    "Endpoint": "/api/compliance/check",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Self-Consistency; Few-Shot"
+  },
+  {
+    "ID": "P14",
+    "Categoria": "Comparativo",
+    "Prompt": "Cumpre a norma [NOME_NORMA] nos espaços [LISTA_ESPAÇOS]?",
+    "Função_MCP": "check_compliance()",
+    "Endpoint": "/api/compliance/check",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Self-Consistency; Few-Shot"
+  },
+  {
+    "ID": "P15",
+    "Categoria": "Comparativo",
+    "Prompt": "Analisa os espaços [LISTA_ESPAÇOS] segundo a norma [NOME_NORMA], destacando conformidade e desvios.",
+    "Função_MCP": "check_compliance()",
+    "Endpoint": "/api/compliance/check",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Self-Consistency; Few-Shot"
+  },
+  {
+    "ID": "P16",
+    "Categoria": "Comparativo",
+    "Prompt": "Lista todas as normas suportadas pelo sistema, incluindo ISO, EN e ASHRAE.",
+    "Função_MCP": "list_iso_standards()",
+    "Endpoint": "/api/standards/list",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Self-Consistency; Few-Shot"
+  },
+  {
+    "ID": "P17",
+    "Categoria": "Comparativo",
+    "Prompt": "Mostra os requisitos da norma [NOME_NORMA], detalhando parâmetros de conforto e limites.",
+    "Função_MCP": "get_standard_requirements()",
+    "Endpoint": "/api/standards/requirements",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Self-Consistency; Few-Shot"
+  },
+  {
+    "ID": "P18",
+    "Categoria": "Diagnóstico",
+    "Prompt": "Analisa o conforto térmico de todos os espaços [LISTA_ESPAÇOS], indicando PMV e categoria ISO.",
+    "Função_MCP": "analyze_thermal_comfort_all_spaces()",
+    "Endpoint": "/api/analysis/comfort",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Self-Consistency"
+  },
+  {
+    "ID": "P19",
+    "Categoria": "Diagnóstico",
+    "Prompt": "Calcula o PMV de todos os espaços entre [DATA_INICIAL] e [DATA_FINAL], mostrando valores por espaço.",
+    "Função_MCP": "analyze_thermal_comfort_all_spaces()",
+    "Endpoint": "/api/analysis/pmv",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Self-Consistency"
+  },
+  {
+    "ID": "P20",
+    "Categoria": "Diagnóstico",
+    "Prompt": "Identifica espaços com problemas de conforto térmico, indicando desvios face às normas.",
+    "Função_MCP": "analyze_thermal_comfort_all_spaces()",
+    "Endpoint": "/api/analysis/problems",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Self-Consistency"
+  },
+  {
+    "ID": "P21",
+    "Categoria": "Diagnóstico",
+    "Prompt": "Qual é a categoria ISO de conforto térmico do espaço [NOME_ESPAÇO]?",
+    "Função_MCP": "analyze_thermal_comfort_all_spaces()",
+    "Endpoint": "/api/analysis/category",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought"
+  },
+  {
+    "ID": "P22",
+    "Categoria": "Diagnóstico",
+    "Prompt": "Há problemas de ventilação nos espaços [LISTA_ESPAÇOS]? Indica valores fora do intervalo recomendado.",
+    "Função_MCP": "analyze_indoor_quality()",
+    "Endpoint": "/api/analysis/ventilation",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought"
+  },
+  {
+    "ID": "P23",
+    "Categoria": "Diagnóstico",
+    "Prompt": "Identifica espaços com humidade excessiva, indicando valores médios e máximos.",
+    "Função_MCP": "analyze_indoor_quality()",
+    "Endpoint": "/api/analysis/humidity",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought"
+  },
+  {
+    "ID": "P24",
+    "Categoria": "Diagnóstico",
+    "Prompt": "Indica se há espaços com pouca iluminação, comparando com valores mínimos recomendados.",
+    "Função_MCP": "analyze_indoor_quality()",
+    "Endpoint": "/api/analysis/lighting",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought"
+  },
+  {
+    "ID": "P25",
+    "Categoria": "Diagnóstico",
+    "Prompt": "Faz uma análise completa da casa [NOME_IFC], incluindo conforto térmico e qualidade do ar.",
+    "Função_MCP": "analyze_indoor_quality()+analyze_thermal_comfort_all_spaces()",
+    "Endpoint": "/api/analysis/complete",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining; Chain-of-Thought"
+  },
+  {
+    "ID": "P26",
+    "Categoria": "Diagnóstico",
+    "Prompt": "Gera um heatmap de temperatura para todos os espaços [LISTA_ESPAÇOS].",
+    "Função_MCP": "generate_heatmap_data()",
+    "Endpoint": "/api/visualization/heatmap",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought"
+  },
+  {
+    "ID": "P27",
+    "Categoria": "Diagnóstico",
+    "Prompt": "Mostra alertas ou avisos atuais relacionados com conforto térmico ou qualidade do ar.",
+    "Função_MCP": "analyze_indoor_quality()",
+    "Endpoint": "/api/alerts/current",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought"
+  },
+  {
+    "ID": "P28",
+    "Categoria": "Prescritivo",
+    "Prompt": "Com base no histórico dos espaços [LISTA_ESPAÇOS], quais os que mais necessitam de intervenção térmica e que medidas são prioritárias?",
+    "Função_MCP": "analyze_thermal_comfort_all_spaces()",
+    "Endpoint": "/api/sensors/current",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Self-Refine"
+  },
+  {
+    "ID": "P29",
+    "Categoria": "Prescritivo",
+    "Prompt": "Sugere como melhorar conforto térmico minimizando custos energéticos.",
+    "Função_MCP": "generate_optimization_recommendations()",
+    "Endpoint": "/api/recommendations/comfort",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Self-Refine"
+  },
+  {
+    "ID": "P30",
+    "Categoria": "Prescritivo",
+    "Prompt": "Sugere ajustes automáticos ao sistema AVAC para otimizar consumo e conforto.",
+    "Função_MCP": "generate_optimization_recommendations()",
+    "Endpoint": "/api/recommendations/hvac",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Self-Refine"
+  },
+  {
+    "ID": "P31",
+    "Categoria": "Prescritivo",
+    "Prompt": "Indica as ações necessárias para que os espaços [LISTA_ESPAÇOS] cumpram a norma [NOME_NORMA].",
+    "Função_MCP": "check_iso_compliance_detailed()",
+    "Endpoint": "/api/recommendations/compliance",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Self-Refine"
+  },
+  {
+    "ID": "P32",
+    "Categoria": "Prescritivo",
+    "Prompt": "Sugere medidas para que o espaço [NOME_ESPAÇO] passe da categoria [CATEGORIA_ATUAL] para [CATEGORIA_DESEJADA].",
+    "Função_MCP": "check_iso_compliance_detailed()",
+    "Endpoint": "/api/recommendations/upgrade",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Self-Refine"
+  },
+  {
+    "ID": "P33",
+    "Categoria": "Prescritivo",
+    "Prompt": "Qual é a ordem de prioridade das intervenções necessárias para melhorar conforto e conformidade?",
+    "Função_MCP": "analyze_historical_statistics()",
+    "Endpoint": "/api/recommendations/priorities",
+    "Técnicas_Prompting": "Structured Prompts; RAG Estruturado (MCP); Chain-of-Thought; Self-Refine"
+  },
+  {
+    "ID": "P34",
+    "Categoria": "Prescritivo",
+    "Prompt": "Indica em que espaços [LISTA_ESPAÇOS] são necessários mais sensores para monitorização adequada.",
+    "Função_MCP": "recommend_sensors_for_all_spaces()",
+    "Endpoint": "/api/recommendations/sensors",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Self-Refine"
+  },
+  {
+    "ID": "P35",
+    "Categoria": "Prescritivo",
+    "Prompt": "Sugere que tipos de sensores devem ser adicionados segundo a norma [NOME_NORMA].",
+    "Função_MCP": "recommend_sensors_by_standard()",
+    "Endpoint": "/api/recommendations/sensor-types",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Self-Refine"
+  },
+  {
+    "ID": "P36",
+    "Categoria": "Prescritivo",
+    "Prompt": "Associa automaticamente sensores disponíveis a todos os espaços [LISTA_ESPAÇOS].",
+    "Função_MCP": "bulk_associate_sensors()",
+    "Endpoint": "/api/sensors/bulk-associate",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Self-Refine"
+  },
+  {
+    "ID": "P37",
+    "Categoria": "Operacional",
+    "Prompt": "Associa o sensor [ID_SENSOR] ao espaço [NOME_ESPAÇO].",
+    "Função_MCP": "associate_sensor()",
+    "Endpoint": "/api/sensors/associate",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP)"
+  },
+  {
+    "ID": "P38",
+    "Categoria": "Operacional",
+    "Prompt": "Associa todos os sensores de tipo [TIPO_SENSOR] aos espaços [LISTA_ESPAÇOS].",
+    "Função_MCP": "bulk_associate_sensors()",
+    "Endpoint": "/api/sensors/bulk-associate",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP)"
+  },
+  {
+    "ID": "P39",
+    "Categoria": "Operacional",
+    "Prompt": "Lista todas as associações entre sensores e espaços [LISTA_ESPAÇOS].",
+    "Função_MCP": "list_associations()",
+    "Endpoint": "/api/sensors/associations",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP)"
+  },
+  {
+    "ID": "P40",
+    "Categoria": "Operacional",
+    "Prompt": "Mostra o histórico de leituras do sensor [ID_SENSOR] nas últimas [N_HORAS], incluindo valores extremos e média.",
+    "Função_MCP": "get_sensor_history()",
+    "Endpoint": "/api/sensors/history",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP)"
+  },
+  {
+    "ID": "P41",
+    "Categoria": "Operacional",
+    "Prompt": "Verifica o estado de funcionamento de todos os sensores associados ao modelo [NOME_IFC].",
+    "Função_MCP": "get_all_sensor_data()",
+    "Endpoint": "/api/sensors/health",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP)"
+  },
+  {
+    "ID": "P42",
+    "Categoria": "Operacional",
+    "Prompt": "Lista todas as normas ISO/EN disponíveis para verificação de conformidade.",
+    "Função_MCP": "list_iso_standards()",
+    "Endpoint": "/api/standards/list",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP)"
+  },
+  {
+    "ID": "P43",
+    "Categoria": "Operacional",
+    "Prompt": "Mostra os requisitos da norma [NOME_NORMA], incluindo parâmetros de conforto e limites.",
+    "Função_MCP": "get_standard_requirements()",
+    "Endpoint": "/api/standards/requirements",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP)"
+  },
+  {
+    "ID": "P44",
+    "Categoria": "Operacional",
+    "Prompt": "Verifica conformidade de todos os espaços [LISTA_ESPAÇOS] com todas as normas disponíveis.",
+    "Função_MCP": "check_compliance()",
+    "Endpoint": "/api/compliance/all",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP)"
+  },
+  {
+    "ID": "P45",
+    "Categoria": "Operacional",
+    "Prompt": "Exporta os dados atuais para um ficheiro Excel, incluindo temperaturas, sensores e conformidade.",
+    "Função_MCP": "N/A",
+    "Endpoint": "/api/export/excel",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP)"
+  },
+  {
+    "ID": "P46",
+    "Categoria": "Operacional",
+    "Prompt": "Cria um relatório PDF com análise completa de conforto térmico e qualidade do ar.",
+    "Função_MCP": "N/A",
+    "Endpoint": "/api/export/pdf",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP)"
+  },
+  {
+    "ID": "P47",
+    "Categoria": "Operacional",
+    "Prompt": "Gera um heatmap térmico para todos os espaços [LISTA_ESPAÇOS].",
+    "Função_MCP": "generate_heatmap_data()",
+    "Endpoint": "/api/visualization/heatmap",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP)"
+  },
+  {
+    "ID": "P48",
+    "Categoria": "Informativo",
+    "Prompt": "Carrega o ficheiro IFC [NOME_IFC] e lista os espaços disponíveis.",
+    "Função_MCP": "load_ifc_spaces()",
+    "Endpoint": "/api/ifc/load",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP)"
+  },
+  {
+    "ID": "P49",
+    "Categoria": "Operacional",
+    "Prompt": "Extrai todos os materiais do ficheiro IFC [NOME_IFC].",
+    "Função_MCP": "extract_materials_from_ifc()",
+    "Endpoint": "/api/ifc/materials",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP)"
+  },
+  {
+    "ID": "P50",
+    "Categoria": "Temporal",
+    "Prompt": "Qual era a temperatura do espaço [NOME_ESPAÇO] ontem às [HORA]?",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/history",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P51",
+    "Categoria": "Temporal",
+    "Prompt": "Mostra o histórico de temperatura do espaço [NOME_ESPAÇO] nos últimos [N_DIAS] dias.",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/history",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P52",
+    "Categoria": "Temporal",
+    "Prompt": "Compara a temperatura média de hoje com a de ontem no espaço [NOME_ESPAÇO].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/comparison",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P53",
+    "Categoria": "Temporal",
+    "Prompt": "Qual foi a temperatura mínima registada no espaço [NOME_ESPAÇO] no período [DATA_INICIAL] a [DATA_FINAL]?",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/extremes",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P54",
+    "Categoria": "Temporal",
+    "Prompt": "Mostra os dados de temperatura do espaço [NOME_ESPAÇO] entre [DATA_INICIAL] e [DATA_FINAL].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/history",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P55",
+    "Categoria": "Temporal",
+    "Prompt": "Qual foi a última leitura do sensor [ID_SENSOR]?",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/current",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P56",
+    "Categoria": "Temporal",
+    "Prompt": "Calcula a média diária de temperatura do espaço [NOME_ESPAÇO] na última semana.",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/statistics",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P57",
+    "Categoria": "Temporal",
+    "Prompt": "Calcula a média horária de temperatura do espaço [NOME_ESPAÇO] hoje.",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/statistics",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P58",
+    "Categoria": "Temporal",
+    "Prompt": "Calcula a média semanal de temperatura do espaço [NOME_ESPAÇO] no último mês.",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/statistics",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P59",
+    "Categoria": "Temporal",
+    "Prompt": "Calcula a média mensal de temperatura do espaço [NOME_ESPAÇO] este ano.",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/statistics",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P60",
+    "Categoria": "Temporal",
+    "Prompt": "Calcula a média de temperatura de 6 em 6 horas nos últimos [N_DIAS] dias para o espaço [NOME_ESPAÇO].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/statistics",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P61",
+    "Categoria": "Temporal",
+    "Prompt": "Mostra estatísticas completas de temperatura do espaço [NOME_ESPAÇO] durante o mês [NOME_MÊS].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/statistics",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P62",
+    "Categoria": "Temporal",
+    "Prompt": "Identifica padrões diários de temperatura no espaço [NOME_ESPAÇO] durante [N_DIAS] dias.",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/patterns",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P63",
+    "Categoria": "Temporal",
+    "Prompt": "Mostra padrões semanais de uso e ocupação nos espaços [LISTA_ESPAÇOS].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/patterns",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P64",
+    "Categoria": "Temporal",
+    "Prompt": "Mostra a tendência de temperatura dos últimos [N_MESES] meses no espaço [NOME_ESPAÇO].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/trends",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P65",
+    "Categoria": "Temporal",
+    "Prompt": "Indica em que períodos o espaço [NOME_ESPAÇO] esteve mais frio.",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/patterns",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P66",
+    "Categoria": "Temporal",
+    "Prompt": "Mostra a correlação entre temperatura e hora do dia no espaço [NOME_ESPAÇO].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/correlations",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P67",
+    "Categoria": "Temporal",
+    "Prompt": "Faz uma análise sazonal de temperatura do espaço [NOME_ESPAÇO].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/patterns",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P68",
+    "Categoria": "Temporal",
+    "Prompt": "Identifica anomalias térmicas no espaço [NOME_ESPAÇO] durante a última semana.",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/anomalies",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P69",
+    "Categoria": "Temporal",
+    "Prompt": "Prevê a temperatura do espaço [NOME_ESPAÇO] para as próximas [N_HORAS] horas.",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/sensors/forecast",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P70",
+    "Categoria": "Temporal",
+    "Prompt": "Verifica se o espaço [NOME_ESPAÇO] estava conforme a norma [NOME_NORMA] na semana passada.",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/compliance/history",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P71",
+    "Categoria": "Temporal",
+    "Prompt": "Mostra como evoluiu a conformidade com a norma [NOME_NORMA] nos últimos [N_MESES] meses.",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/compliance/trends",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P72",
+    "Categoria": "Temporal",
+    "Prompt": "Mostra a taxa de conformidade mensal do espaço [NOME_ESPAÇO] este ano.",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/compliance/monthly",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P73",
+    "Categoria": "Temporal",
+    "Prompt": "Quantas horas por semana o espaço [NOME_ESPAÇO] esteve fora de conformidade?",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/compliance/statistics",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P74",
+    "Categoria": "Temporal",
+    "Prompt": "Compara a conformidade com a norma [NOME_NORMA] entre os meses [MÊS_1] e [MÊS_2].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/compliance/comparison",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P75",
+    "Categoria": "Temporal",
+    "Prompt": "Indica em que percentil de conformidade está o espaço [NOME_ESPAÇO] relativamente à norma [NOME_NORMA].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/compliance/percentile",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P76",
+    "Categoria": "Temporal",
+    "Prompt": "Quantos dias este mês o espaço [NOME_ESPAÇO] esteve 100% conforme à norma [NOME_NORMA]?",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/compliance/perfect-days",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P77",
+    "Categoria": "Temporal",
+    "Prompt": "Quantos alertas de nível de conformidade foram registados no último mês para os espaços [LISTA_ESPAÇOS]?",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/compliance/alerts",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P78",
+    "Categoria": "Temporal",
+    "Prompt": "Compara a temperatura média do espaço [NOME_ESPAÇO] antes e depois da intervenção [TIPO_INTERVENÇÃO] realizada em [DATA].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/intervention/comparison",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P79",
+    "Categoria": "Temporal",
+    "Prompt": "Avalia se o ajuste do setpoint de [VALOR_ANTERIOR]°C para [VALOR_NOVO]°C foi eficaz no espaço [NOME_ESPAÇO].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/intervention/effectiveness",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P80",
+    "Categoria": "Temporal",
+    "Prompt": "Analisa se a qualidade do ar melhorou após instalar [TIPO_INTERVENÇÃO] no espaço [NOME_ESPAÇO].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/intervention/comparison",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P81",
+    "Categoria": "Temporal",
+    "Prompt": "Calcula o retorno do investimento da intervenção [TIPO_INTERVENÇÃO] realizada no espaço [NOME_ESPAÇO].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/intervention/roi",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P82",
+    "Categoria": "Temporal",
+    "Prompt": "Compara o impacto das intervenções [LISTA_INTERVENÇÕES] no desempenho térmico e energético dos espaços [LISTA_ESPAÇOS].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/intervention/ranking",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P83",
+    "Categoria": "Temporal",
+    "Prompt": "Mostra os dados da semana de testes [DATA_INICIAL] a [DATA_FINAL] comparados com o baseline do espaço [NOME_ESPAÇO].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/intervention/test-period",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P84",
+    "Categoria": "Temporal",
+    "Prompt": "Valida se a recomendação de zoneamento aplicada ao espaço [NOME_ESPAÇO] foi eficaz.",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/intervention/validation",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P85",
+    "Categoria": "Temporal",
+    "Prompt": "Analisa como evoluiu o desempenho do espaço [NOME_ESPAÇO] desde a instalação da intervenção [TIPO_INTERVENÇÃO].",
+    "Função_MCP": "Backend",
+    "Endpoint": "/api/intervention/evolution",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Prompt Chaining"
+  },
+  {
+    "ID": "P86",
+    "Categoria": "Diagnóstico",
+    "Prompt": "Analisa o conforto térmico do espaço [NOME_ESPAÇO] e verifica a resposta seguindo estes passos:\n1. Gera diagnóstico inicial (PMV, PPD, categoria ISO 7730)\n2. Formula 3 questões de verificação sobre a resposta\n3. Responde a cada questão de verificação consultando dados reais\n4. Se encontrares inconsistências, corrige o diagnóstico inicial\n5. Apresenta o diagnóstico final validado",
+    "Função_MCP": "analyze_thermal_comfort_all_spaces(); check_iso_compliance_detailed()",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Chain-of-Verification (CoVe)"
+  },
+  {
+    "ID": "P87",
+    "Categoria": "Prescritivo",
+    "Prompt": "Sugere intervenções de retrofit para o espaço [NOME_ESPAÇO] com verificação cruzada:\n1. Propõe 3 intervenções candidatas\n2. Para cada intervenção, formula questões: 'Esta intervenção é aplicável dado [ORIENTAÇÃO/MATERIAIS/SISTEMAS]?'\n3. Verifica aplicabilidade consultando dados BIM\n4. Elimina intervenções não aplicáveis\n5. Apresenta recomendações finais validadas",
+    "Função_MCP": "generate_optimization_recommendations(); load_ifc_spaces(); extract_materials_from_ifc()",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Chain-of-Verification (CoVe); Self-Refine"
+  },
+  {
+    "ID": "P88",
+    "Categoria": "Comparativo",
+    "Prompt": "Compara conforto térmico entre espaços [LISTA_ESPAÇOS] com validação:\n1. Calcula PMV para cada espaço\n2. Ordena por desempenho\n3. Verifica: 'Os espaços com pior desempenho têm características comuns (orientação, área, materiais)?'\n4. Cruza dados térmicos (IoT) com dados geométricos (BIM)\n5. Confirma ou corrige ranking inicial\n6. Apresenta comparação validada com justificação",
+    "Função_MCP": "analyze_thermal_comfort_all_spaces(); load_ifc_spaces(); extract_materials_from_ifc()",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Chain-of-Verification (CoVe)"
+  },
+  {
+    "ID": "P89",
+    "Categoria": "Diagnóstico",
+    "Prompt": "Verifica conformidade com ISO 16798 para o espaço [NOME_ESPAÇO] com auto-validação:\n1. Diagnóstico inicial: CO₂, temperatura, humidade vs limiares ISO 16798\n2. Questões verificação: 'Os valores estão no intervalo fisicamente plausível?', 'A norma aplica-se a este tipo de espaço?', 'Os sensores estão calibrados?'\n3. Cruza com histórico para detectar anomalias\n4. Corrige diagnóstico se necessário\n5. Apresenta conformidade validada",
+    "Função_MCP": "check_iso_compliance_detailed(); get_sensor_history(); list_associations()",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Chain-of-Verification (CoVe); Self-Consistency"
+  },
+  {
+    "ID": "P90",
+    "Categoria": "Temporal",
+    "Prompt": "Identifica padrões anómalos no espaço [NOME_ESPAÇO] com verificação:\n1. Analisa histórico de 7 dias\n2. Identifica picos/vales de temperatura\n3. Para cada anomalia, pergunta: 'Existe correlação com ocupação?', 'Há eventos externos (clima)?', 'Sensor está funcional?'\n4. Cruza com dados de outros sensores no mesmo espaço\n5. Confirma ou descarta anomalias\n6. Apresenta padrões validados",
+    "Função_MCP": "get_temporal_analysis(); analyze_temporal_patterns(); get_sensor_history()",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Chain-of-Verification (CoVe); Prompt Chaining"
+  },
+  {
+    "ID": "P91",
+    "Categoria": "Diagnóstico",
+    "Prompt": "Analisa o conforto térmico do espaço [NOME_ESPAÇO] seguindo esta metodologia:\nMETODOLOGIA:\n1. RECOLHA: Identifica que dados são necessários (temperatura, humidade, área, orientação)\n2. CÁLCULO: Define que equações aplicar (Fanger PMV, ISO 7730)\n3. COMPARAÇÃO: Estabelece limiares normativos relevantes\n4. DIAGNÓSTICO: Interpreta resultados (conforme/não-conforme)\n5. RECOMENDAÇÃO: Se não-conforme, sugere correções\n6. VALIDAÇÃO: Verifica consistência da análise\nAPLICA ESTA METODOLOGIA AO ESPAÇO SOLICITADO.",
+    "Função_MCP": "analyze_thermal_comfort_all_spaces(); get_all_sensor_data(); load_ifc_spaces()",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Meta-prompting"
+  },
+  {
+    "ID": "P92",
+    "Categoria": "Prescritivo",
+    "Prompt": "Otimiza consumo energético do edifício seguindo este FRAMEWORK:\nFRAMEWORK DE OTIMIZAÇÃO:\n1. DIAGNÓSTICO: Avalia situação atual (temperaturas, consumos, PMV)\n2. PRIORIZAÇÃO: Ordena espaços por potencial de melhoria (custo-benefício)\n3. GERAÇÃO: Propõe 3 categorias de intervenções (envolvente, sistemas, operação)\n4. AVALIAÇÃO: Estima impacto de cada intervenção (ΔT, ΔConsumo, ΔPMV)\n5. SELEÇÃO: Escolhe intervenções com melhor ROI\n6. SEQUENCIAMENTO: Define ordem de implementação\nAPLICA ESTE FRAMEWORK.",
+    "Função_MCP": "generate_optimization_recommendations(); analyze_thermal_comfort_all_spaces(); extract_materials_from_ifc()",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Meta-prompting; Self-Refine"
+  },
+  {
+    "ID": "P93",
+    "Categoria": "Comparativo",
+    "Prompt": "Compara desempenho de espaços [LISTA_ESPAÇOS] seguindo PROTOCOLO:\nPROTOCOLO DE BENCHMARK:\n1. NORMALIZAÇÃO: Ajusta métricas por área útil (kWh/m², °C·h/m²)\n2. CATEGORIZAÇÃO: Agrupa espaços por função (escritórios, circulação, técnicos)\n3. RANKING: Ordena dentro de cada categoria\n4. ANÁLISE CAUSAL: Correlaciona desempenho com variáveis BIM (orientação, U-value, g-value)\n5. IDENTIFICAÇÃO: Destaca best/worst performers\n6. JUSTIFICAÇÃO: Explica diferenças com dados objetivos\nAPLICA PROTOCOLO.",
+    "Função_MCP": "analyze_thermal_comfort_all_spaces(); load_ifc_spaces(); extract_materials_from_ifc(); compare_spaces_temperature()",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Meta-prompting"
+  },
+  {
+    "ID": "P94",
+    "Categoria": "Temporal",
+    "Prompt": "Analisa tendências de conforto térmico no espaço [NOME_ESPAÇO] seguindo ABORDAGEM:\nABORDAGEM DE ANÁLISE TEMPORAL:\n1. SEGMENTAÇÃO: Divide histórico em períodos (diário, semanal, mensal)\n2. DECOMPOSIÇÃO: Separa componentes (tendência, sazonalidade, resíduo)\n3. DETECÇÃO: Identifica mudanças de regime (antes/depois de intervenção)\n4. CORRELAÇÃO: Cruza com variáveis externas (clima, ocupação, horários AVAC)\n5. PROJEÇÃO: Extrapola tendências (curto prazo)\n6. ALERTAS: Sinaliza desvios significativos\nAPLICA ABORDAGEM.",
+    "Função_MCP": "get_temporal_analysis(); analyze_temporal_patterns(); get_sensor_history()",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Meta-prompting; Prompt Chaining"
+  },
+  {
+    "ID": "P95",
+    "Categoria": "Diagnóstico",
+    "Prompt": "Verifica conformidade multi-normativa do espaço [NOME_ESPAÇO] seguindo SISTEMÁTICA:\nSISTEMÁTICA DE VERIFICAÇÃO:\n1. IDENTIFICAÇÃO: Determina normas aplicáveis (ISO 7730, ISO 16798, ASHRAE 55)\n2. PARAMETRIZAÇÃO: Lista requisitos de cada norma (limiares, métodos cálculo)\n3. MEDIÇÃO: Recolhe dados necessários (T, RH, CO₂, v_ar, T_ext)\n4. COMPUTAÇÃO: Aplica equações de cada norma independentemente\n5. SÍNTESE: Compara resultados entre normas\n6. CONCLUSÃO: Apresenta conformidade agregada (AND lógico)\nAPLICA SISTEMÁTICA.",
+    "Função_MCP": "check_iso_compliance_detailed(); list_iso_standards(); get_standard_requirements(); analyze_thermal_comfort_all_spaces()",
+    "Técnicas_Prompting": "Structured Prompts; Instruction Prompting; RAG Estruturado (MCP); Chain-of-Thought; Meta-prompting; Self-Consistency"
+  }
+]

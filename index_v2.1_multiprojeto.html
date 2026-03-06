@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Twin BIM + IoT v2.1 - Multi-Projeto</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            height: 100vh;
+            gap: 0;
+        }
+
+        .center-panel {
+            background: #0f1922;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .controls {
+            padding: 15px;
+            background: #16213e;
+            border-bottom: 2px solid #2a3b5a;
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-group label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+        }
+
+        #ifcFile {
+            padding: 8px;
+            border: 2px solid #2a3b5a;
+            border-radius: 6px;
+            background: #0f1922;
+            color: white;
+            font-size: 13px;
+            max-width: 250px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover:not(:disabled) {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        button.danger {
+            background: #ef4444;
+        }
+
+        button.danger:hover:not(:disabled) {
+            background: #dc2626;
+        }
+
+        .model-info {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid #667eea;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .model-info.active { display: flex; }
+
+        .mode-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .mode-badge.mock {
+            background: #f59e0b;
+            color: #000;
+        }
+
+        .mode-badge.real {
+            background: #10b981;
+            color: #fff;
+        }
+
+        .project-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            background: #667eea;
+            color: #fff;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #canvas-container {
+            flex: 1;
+            position: relative;
+            background: #0f1922;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 25, 34, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #2a3b5a;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .upload-progress {
+            width: 300px;
+            height: 8px;
+            background: #2a3b5a;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .upload-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .thermal-legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(22, 33, 62, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #2a3b5a;
+            z-index: 10;
+        }
+
+        .thermal-legend h4 {
+            font-size: 12px;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 11px;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 15px;
+            border-radius: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .right-panel {
+            background: #16213e;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-left: 2px solid #2a3b5a;
+        }
+
+        .panel-header {
+            padding: 15px;
+            background: #1a2942;
+            border-bottom: 2px solid #2a3b5a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .panel-header h3 {
+            font-size: 14px;
+            color: #667eea;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        #refreshSensors, #clearAssociations {
+            padding: 6px 12px;
+            font-size: 11px;
+        }
+
+        .sensors-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .space-card {
+            background: #1a2942;
+            border: 1px solid #2a3b5a;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .space-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .space-card h4 {
+            font-size: 13px;
+            margin-bottom: 12px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sensor-reading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .sensor-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.9;
+        }
+
+        .sensor-icon { font-size: 16px; }
+
+        .sensor-value {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px 20px;
+            color: #667eea;
+            opacity: 0.6;
+        }
+
+        .sensors-list::-webkit-scrollbar { width: 8px; }
+        .sensors-list::-webkit-scrollbar-track { background: #1a2942; }
+        .sensors-list::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        .info-banner {
+            padding: 10px 15px;
+            background: rgba(102, 126, 234, 0.2);
+            border-bottom: 1px solid #667eea;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="center-panel">
+            <div class="controls">
+                <div class="control-group">
+                    <label>Ficheiro IFC</label>
+                    <input type="file" id="ifcFile" accept=".ifc">
+                </div>
+                <button id="loadBtn">📥 Carregar IFC</button>
+                <button id="testBtn">🧪 Blocos Teste</button>
+                <div class="model-info" id="modelInfo">
+                    <span>📁</span>
+                    <div class="project-badge" id="projectBadge" title="Projeto ativo">-</div>
+                    <span id="currentModel">-</span>
+                    <span class="mode-badge mock" id="modeBadge">MOCK</span>
+                </div>
+            </div>
+
+            <div id="canvas-container">
+                <canvas id="threeCanvas"></canvas>
+                
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="loading-spinner"></div>
+                    <div id="loadingText" style="font-size: 14px;">A carregar...</div>
+                    <div class="upload-progress">
+                        <div class="upload-progress-bar" id="uploadProgress"></div>
+                    </div>
+                </div>
+
+                <div class="thermal-legend">
+                    <h4>🌡️ Legenda Térmica</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #3b82f6;"></div>
+                        <span>Frio (&lt; 20°C)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #10b981;"></div>
+                        <span>Confortável (20-26°C)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #f59e0b;"></div>
+                        <span>Morno (26-28°C)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ef4444;"></div>
+                        <span>Quente (&gt; 28°C)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="info-banner">
+                <span>🏗️</span>
+                <span>v2.1 - Multi-Projeto: Trabalha com vários IFCs sem conflitos!</span>
+            </div>
+            <div class="panel-header">
+                <h3>📊 Dados dos Sensores</h3>
+                <div class="header-actions">
+                    <button id="refreshSensors" title="Atualizar dados">🔄</button>
+                    <button id="clearAssociations" class="danger" title="Limpar associações deste projeto">🗑️</button>
+                </div>
+            </div>
+            <div class="sensors-list" id="sensorsList">
+                <div class="no-data">
+                    <p>Carrega um modelo IFC para visualizar sensores</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const API_BASE = 'http://localhost:5000';
+
+        let scene, camera, renderer;
+        let spaceMeshes = {};
+        let currentIFC = null;  // Nome do ficheiro IFC atual
+        let sensorsInterval = null;
+
+        // ==========================================
+        // INICIALIZAÇÃO 3D
+        // ==========================================
+        function init3D() {
+            const container = document.getElementById('canvas-container');
+            const canvas = document.getElementById('threeCanvas');
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0f1922);
+
+            camera = new THREE.PerspectiveCamera(
+                60,
+                container.clientWidth / container.clientHeight,
+                0.1,
+                1000
+            );
+            camera.position.set(15, 15, 15);
+            camera.lookAt(0, 0, 0);
+
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(10, 10, 5);
+            scene.add(directionalLight);
+
+            const gridHelper = new THREE.GridHelper(30, 30, 0x667eea, 0x2a3b5a);
+            scene.add(gridHelper);
+
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+
+            function animate() {
+                requestAnimationFrame(animate);
+                scene.rotation.y += 0.001;
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            console.log('✅ Scene 3D inicializada');
+        }
+
+        // ==========================================
+        // HEATMAP
+        // ==========================================
+        function getTemperatureColor(temp) {
+            if (temp < 20) return 0x3b82f6;
+            if (temp < 26) return 0x10b981;
+            if (temp < 28) return 0xf59e0b;
+            return 0xef4444;
+        }
+
+        // ==========================================
+        // CARREGAR SENSORES (COM FILTRO POR IFC)
+        // ==========================================
+        async function loadSensors() {
+            if (!currentIFC) {
+                console.warn('⚠️ Nenhum IFC carregado');
+                return;
+            }
+
+            try {
+                console.log(`🔍 Carregando sensores para: ${currentIFC}`);
+                
+                // ✨ NOVO: Passa parâmetro file
+                const response = await fetch(`${API_BASE}/api/sensors/current?file=${encodeURIComponent(currentIFC)}`);
+                const data = await response.json();
+
+                console.log('📊 Resposta da API:', data);
+
+                if (!data.success) {
+                    console.error('❌ Erro:', data.error);
+                    return;
+                }
+
+                const sensorsList = document.getElementById('sensorsList');
+                sensorsList.innerHTML = '';
+
+                // Atualizar badge de modo
+                const modeBadge = document.getElementById('modeBadge');
+                if (data.mode === 'REAL') {
+                    modeBadge.textContent = 'REAL';
+                    modeBadge.className = 'mode-badge real';
+                } else {
+                    modeBadge.textContent = 'MOCK';
+                    modeBadge.className = 'mode-badge mock';
+                }
+
+                if (data.spaces && data.spaces.length > 0) {
+                    console.log(`✅ ${data.spaces.length} espaços com dados`);
+
+                    data.spaces.forEach(space => {
+                        // Aplicar cor ao cubo 3D
+                        if (spaceMeshes[space.space_name] && space.temperature) {
+                            const color = getTemperatureColor(space.temperature);
+                            spaceMeshes[space.space_name].material.color.setHex(color);
+                        }
+
+                        // Criar card
+                        const card = document.createElement('div');
+                        card.className = 'space-card';
+                        
+                        let cardHTML = `<h4>📍 ${space.space_name}</h4>`;
+
+                        if (space.temperature !== undefined) {
+                            cardHTML += `
+                                <div class="sensor-reading">
+                                    <span class="sensor-label">
+                                        <span class="sensor-icon">🌡️</span> Temperatura
+                                    </span>
+                                    <span class="sensor-value">${space.temperature} °C</span>
+                                </div>
+                            `;
+                        }
+
+                        if (space.humidity !== undefined) {
+                            cardHTML += `
+                                <div class="sensor-reading">
+                                    <span class="sensor-label">
+                                        <span class="sensor-icon">💧</span> Humidade
+                                    </span>
+                                    <span class="sensor-value">${space.humidity} %</span>
+                                </div>
+                            `;
+                        }
+
+                        if (space.co2 !== undefined) {
+                            cardHTML += `
+                                <div class="sensor-reading">
+                                    <span class="sensor-label">
+                                        <span class="sensor-icon">🫁</span> CO₂
+                                    </span>
+                                    <span class="sensor-value">${space.co2} ppm</span>
+                                </div>
+                            `;
+                        }
+
+                        card.innerHTML = cardHTML;
+                        sensorsList.appendChild(card);
+                    });
+                } else {
+                    sensorsList.innerHTML = '<div class="no-data"><p>Nenhum dado disponível</p></div>';
+                }
+
+            } catch (error) {
+                console.error('❌ Erro:', error);
+                document.getElementById('sensorsList').innerHTML = 
+                    `<div class="no-data"><p>Erro: ${error.message}</p></div>`;
+            }
+        }
+
+        // ==========================================
+        // LIMPAR ASSOCIAÇÕES
+        // ==========================================
+        async function clearAssociations() {
+            if (!currentIFC) {
+                alert('⚠️ Nenhum projeto carregado');
+                return;
+            }
+
+            const confirm_msg = `Tens a certeza que queres limpar TODAS as associações do projeto "${currentIFC}"?\n\nEsta ação não pode ser desfeita!`;
+            
+            if (!confirm(confirm_msg)) {
+                return;
+            }
+
+            try {
+                console.log(`🗑️ Limpando associações de: ${currentIFC}`);
+
+                const response = await fetch(`${API_BASE}/api/mcp/clear`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ file: currentIFC })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`✅ ${data.deleted} associações removidas de ${currentIFC}`);
+                    await loadSensors();  // Recarregar (vai usar MOCK agora)
+                } else {
+                    alert(`❌ Erro: ${data.error}`);
+                }
+
+            } catch (error) {
+                console.error('❌ Erro:', error);
+                alert(`❌ Erro ao limpar: ${error.message}`);
+            }
+        }
+
+        // ==========================================
+        // BLOCOS TESTE
+        // ==========================================
+        function createTestBlocks() {
+            while(scene.children.length > 0) {
+                scene.remove(scene.children[0]);
+            }
+            spaceMeshes = {};
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(10, 10, 5);
+            scene.add(directionalLight);
+            const gridHelper = new THREE.GridHelper(30, 30, 0x667eea, 0x2a3b5a);
+            scene.add(gridHelper);
+
+            const testSpaces = [
+                { name: 'Sala 1', x: -4, z: -4 },
+                { name: 'Sala 2', x: 0, z: -4 },
+                { name: 'Sala 3', x: 4, z: -4 },
+                { name: 'Sala 4', x: -4, z: 4 },
+                { name: 'Sala 5', x: 0, z: 4 },
+                { name: 'Sala 6', x: 4, z: 4 }
+            ];
+
+            testSpaces.forEach(space => {
+                const geometry = new THREE.BoxGeometry(2.5, 2.5, 2.5);
+                const material = new THREE.MeshPhongMaterial({
+                    color: 0x667eea,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                const cube = new THREE.Mesh(geometry, material);
+                cube.position.set(space.x, 1.25, space.z);
+                
+                spaceMeshes[space.name] = cube;
+                scene.add(cube);
+
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = 256;
+                canvas.height = 64;
+                context.fillStyle = '#667eea';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                context.fillStyle = 'white';
+                context.font = 'bold 24px Arial';
+                context.textAlign = 'center';
+                context.fillText(space.name, 128, 40);
+
+                const texture = new THREE.CanvasTexture(canvas);
+                const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+                const sprite = new THREE.Sprite(spriteMaterial);
+                sprite.position.set(space.x, 3.5, space.z);
+                sprite.scale.set(2, 0.5, 1);
+                scene.add(sprite);
+            });
+
+            const modelInfo = document.getElementById('modelInfo');
+            const projectBadge = document.getElementById('projectBadge');
+            const currentModel = document.getElementById('currentModel');
+            
+            modelInfo.classList.add('active');
+            projectBadge.textContent = 'TESTE';
+            currentModel.textContent = `${testSpaces.length} blocos`;
+
+            currentIFC = 'test_blocks.ifc';  // Ficheiro fictício
+            console.log('✅ Blocos teste criados');
+        }
+
+        // ==========================================
+        // CARREGAR IFC
+        // ==========================================
+        async function loadIFCModel() {
+            const fileInput = document.getElementById('ifcFile');
+            
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Por favor selecione um arquivo IFC');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const fileName = file.name;
+
+            console.log(`📁 Iniciando upload: ${fileName}`);
+
+            const overlay = document.getElementById('loadingOverlay');
+            const loadingText = document.getElementById('loadingText');
+            const progressBar = document.getElementById('uploadProgress');
+            
+            overlay.style.display = 'flex';
+            loadingText.textContent = 'Fazendo upload...';
+            progressBar.style.width = '0%';
+
+            try {
+                // UPLOAD
+                console.log('📤 Upload...');
+                
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const uploadResponse = await fetch(`${API_BASE}/api/ifc/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!uploadResponse.ok) {
+                    throw new Error(`Erro no upload: ${uploadResponse.status}`);
+                }
+
+                const uploadData = await uploadResponse.json();
+                
+                if (!uploadData.success) {
+                    throw new Error(uploadData.error);
+                }
+
+                progressBar.style.width = '50%';
+                console.log(`✅ Upload: ${uploadData.filename}`);
+
+                // EXTRAIR ESPAÇOS
+                console.log('📊 Extraindo espaços...');
+                loadingText.textContent = 'Extraindo espaços...';
+                
+                while(scene.children.length > 0) {
+                    scene.remove(scene.children[0]);
+                }
+                spaceMeshes = {};
+
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+                scene.add(ambientLight);
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(10, 10, 5);
+                scene.add(directionalLight);
+                const gridHelper = new THREE.GridHelper(30, 30, 0x667eea, 0x2a3b5a);
+                scene.add(gridHelper);
+
+                const spacesResponse = await fetch(`${API_BASE}/api/ifc/spaces?file=${encodeURIComponent(uploadData.filename)}`);
+                const spacesData = await spacesResponse.json();
+
+                progressBar.style.width = '75%';
+
+                if (spacesData.spaces && spacesData.spaces.length > 0) {
+                    console.log(`✅ ${spacesData.spaces.length} espaços`);
+
+                    loadingText.textContent = `Criando ${spacesData.spaces.length} blocos 3D...`;
+
+                    const spacesPerRow = Math.ceil(Math.sqrt(spacesData.spaces.length));
+                    const spacing = 3;
+
+                    spacesData.spaces.forEach((space, index) => {
+                        const geometry = new THREE.BoxGeometry(2.5, 2.5, 2.5);
+                        const material = new THREE.MeshPhongMaterial({
+                            color: 0x667eea,
+                            transparent: true,
+                            opacity: 0.8
+                        });
+                        const cube = new THREE.Mesh(geometry, material);
+                        
+                        const row = Math.floor(index / spacesPerRow);
+                        const col = index % spacesPerRow;
+                        const x = (col - spacesPerRow / 2) * spacing;
+                        const z = (row - spacesPerRow / 2) * spacing;
+                        
+                        cube.position.set(x, 1.25, z);
+                        
+                        spaceMeshes[space.name] = cube;
+                        scene.add(cube);
+
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.width = 256;
+                        canvas.height = 64;
+                        context.fillStyle = '#667eea';
+                        context.fillRect(0, 0, canvas.width, canvas.height);
+                        context.fillStyle = 'white';
+                        context.font = 'bold 24px Arial';
+                        context.textAlign = 'center';
+                        context.fillText(space.name, 128, 40);
+
+                        const texture = new THREE.CanvasTexture(canvas);
+                        const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+                        const sprite = new THREE.Sprite(spriteMaterial);
+                        sprite.position.set(x, 3.5, z);
+                        sprite.scale.set(2, 0.5, 1);
+                        scene.add(sprite);
+                    });
+
+                    // ✨ Atualizar projeto atual
+                    currentIFC = uploadData.filename;
+                    
+                    const modelInfo = document.getElementById('modelInfo');
+                    const projectBadge = document.getElementById('projectBadge');
+                    const currentModel = document.getElementById('currentModel');
+                    
+                    modelInfo.classList.add('active');
+                    projectBadge.textContent = fileName;
+                    projectBadge.title = fileName;
+                    currentModel.textContent = `${spacesData.spaces.length} espaços`;
+                    
+                    progressBar.style.width = '90%';
+                    loadingText.textContent = 'Carregando sensores...';
+                    await loadSensors();
+                    
+                    if (sensorsInterval) clearInterval(sensorsInterval);
+                    sensorsInterval = setInterval(loadSensors, 30000);
+
+                    progressBar.style.width = '100%';
+                    console.log('✅ Modelo carregado!');
+                    
+                    setTimeout(() => {
+                        alert(`✅ Sucesso!\n\nProjeto: ${fileName}\nEspaços: ${spacesData.spaces.length}\n\nv2.1: Projetos isolados - sem conflitos!`);
+                    }, 500);
+                } else {
+                    console.warn('⚠️ Nenhum espaço encontrado');
+                    alert('⚠️ Nenhum espaço (IfcSpace) encontrado no IFC');
+                }
+
+            } catch (error) {
+                console.error('❌ Erro:', error);
+                alert('❌ Erro:\n\n' + error.message);
+            } finally {
+                overlay.style.display = 'none';
+            }
+        }
+
+        // ==========================================
+        // INICIALIZAÇÃO
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 Digital Twin v2.1 - Multi-Projeto');
+            
+            init3D();
+
+            document.getElementById('loadBtn').addEventListener('click', loadIFCModel);
+            document.getElementById('testBtn').addEventListener('click', createTestBlocks);
+            document.getElementById('refreshSensors').addEventListener('click', loadSensors);
+            document.getElementById('clearAssociations').addEventListener('click', clearAssociations);
+
+            console.log('✅ Sistema pronto!');
+        });
+    </script>
+</body>
+</html>
